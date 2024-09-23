@@ -87,7 +87,7 @@ WSGI_APPLICATION = "tiendafull.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url(
+    "default": dj_database_url.config(
         default='postgresql://fkrenn:31CR9kCLpC6v3YaE227AgxvNxqkKd8U8@dpg-crobpb88fa8c738pv2e0-a.oregon-postgres.render.com/tiendafull',
         conn_max_age=600
     )
