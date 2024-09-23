@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-_bb%&#_z$^%8k22p1_41ugryliep5*!i5w72rq9@_gq(2*+^0!"
+SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-_bb%&#_z$^%8k22p1_41ugryliep5*!i5w72rq9@_gq(2*+^0!')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
 
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -80,14 +86,10 @@ WSGI_APPLICATION = "tiendafull.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "b7nwp7h0fuiszk7hshlf",
-        "USER": "umullnl7aszm6g3k",
-        "PASSWORD": "eiexNJuJcDqYtJHkxbi0",
-        "HOST": "b7nwp7h0fuiszk7hshlf-mysql.services.clever-cloud.com",
-        "PORT": "3306",
-    }
+    "default": dj_database_url.config(
+        default='postgresql://fkrenn:31CR9kCLpC6v3YaE227AgxvNxqkKd8U8@dpg-crobpb88fa8c738pv2e0-a.oregon-postgres.render.com/tiendafull',
+        conn_max_age=600
+    )
 }
 
 
