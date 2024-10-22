@@ -88,7 +88,7 @@ WSGI_APPLICATION = "tiendafull.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        default='postgresql://fkrenn:31CR9kCLpC6v3YaE227AgxvNxqkKd8U8@dpg-crobpb88fa8c738pv2e0-a.oregon-postgres.render.com/tiendafull',
+        default='postgresql://fkrenn:4HItkfa5NFhuChfVyBgMJl2rjJcxlXpW@dpg-csc2m98gph6c73citq60-a.oregon-postgres.render.com/tiendafull_8qu3',
         conn_max_age=600
     )
 }
