@@ -130,9 +130,11 @@ class CartViewSet(viewsets.ModelViewSet):
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+            
             item, item_created = CartDetail.objects.get_or_create(
                 carrito=carrito, producto=producto, defaults={"cantidad": cantidad}
             )
+            
             if not item_created:
                 item.cantidad += int(cantidad)
             item.save()
@@ -246,6 +248,31 @@ class PurchaseViewSet(viewsets.ModelViewSet):
             return Response(response_data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=True, methods=["patch"])
+    def cancel_purchase(self, request, pk=None):
+        try:
+            purchase = Purchase.objects.get(id=pk)
+
+            if purchase.es_cancelada:
+                return Response(
+                    {"error": "La compra ya ha sido cancelada previamente"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if purchase.email != request.user:
+                return Response(
+                    {"error": "No tiene permisos para cancelar esta compra"},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+            
+            purchase.es_cancelada = True
+            purchase.save()
+            return Response({"message": "Compra cancelada exitosamente"})
+        except Purchase.DoesNotExist:
+            return Response(
+                {"error": "Compra no encontrada"}, status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class DeliveryViewSet(viewsets.ModelViewSet):

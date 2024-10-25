@@ -164,7 +164,8 @@ class PurchaseSerializer(serializers.ModelSerializer):
             "modo_pago",
             "total",
             "fecha",
-            "detalle",
+            "es_cancelada",
+            "detalle"
         ]
 
     def get_email(self, object):

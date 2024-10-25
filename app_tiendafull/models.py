@@ -164,6 +164,7 @@ class Purchase(models.Model):
     modo_pago = models.ForeignKey(
         PaymentModeType, on_delete=models.SET_NULL, null=True, blank=True
     )
+    es_cancelada = models.BooleanField(default=False)
 
     class Meta:
         db_table = "compra"
