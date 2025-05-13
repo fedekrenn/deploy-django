@@ -153,7 +153,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:4200", "http://127.0.0.1:4200", "https://tiendafullbike.netlify.app/"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:4200", "http://127.0.0.1:4200", "https://tiendafullbike.netlify.app"]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     "DELETE",
