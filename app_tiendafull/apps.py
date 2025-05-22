@@ -6,4 +6,4 @@ class AppTiendafullConfig(AppConfig):
     name = "app_tiendafull"
 
     def ready(self):
-        import  app_tiendafull.signals
+        import app_tiendafull.signals

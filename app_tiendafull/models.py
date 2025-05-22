@@ -99,7 +99,7 @@ class WheelSizeType(models.Model):
 
 
 class Product(models.Model):
-    modelo = models.CharField(max_length=45, default='Modelo por defecto')
+    modelo = models.CharField(max_length=45, default="Modelo por defecto")
     precio = models.FloatField(default=0.0)
     stock = models.IntegerField(default=0)
     imagen = models.CharField(max_length=200, null=True, blank=True)
@@ -144,7 +144,7 @@ class Cart(models.Model):
 
 class CartDetail(models.Model):
     cantidad = models.PositiveIntegerField()
-    carrito = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    carrito = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
     producto = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     class Meta:

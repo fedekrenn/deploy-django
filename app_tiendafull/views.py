@@ -16,6 +16,7 @@ from rest_framework.decorators import action
 from django.db.models import Sum, F
 from .utils import generate_invoice_number
 from django.shortcuts import get_object_or_404
+import mercadopago
 
 
 class LoginView(KnoxLoginView):
@@ -130,11 +131,11 @@ class CartViewSet(viewsets.ModelViewSet):
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            
+
             item, item_created = CartDetail.objects.get_or_create(
                 carrito=carrito, producto=producto, defaults={"cantidad": cantidad}
             )
-            
+
             if not item_created:
                 item.cantidad += int(cantidad)
             item.save()
@@ -248,24 +249,22 @@ class PurchaseViewSet(viewsets.ModelViewSet):
             return Response(response_data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+
     @action(detail=True, methods=["patch"])
     def cancel_purchase(self, request, pk=None):
         try:
             purchase = Purchase.objects.get(id=pk)
-
             if purchase.es_cancelada:
                 return Response(
                     {"error": "La compra ya ha sido cancelada previamente"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-
             if purchase.email != request.user:
                 return Response(
                     {"error": "No tiene permisos para cancelar esta compra"},
                     status=status.HTTP_403_FORBIDDEN,
                 )
-            
+
             purchase.es_cancelada = True
             purchase.save()
             return Response({"message": "Compra cancelada exitosamente"})
@@ -288,3 +287,59 @@ class PurchaseDetailViewSet(viewsets.ModelViewSet):
     queryset = PurchaseDetail.objects.all()
     serializer_class = PurchaseDetailSerializer
     permission_classes = [IsAuthenticated]
+
+
+class MercadoPagoPreferenceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        items = request.data.get("items", [])
+
+        if not items:
+            return Response(
+                {"error": "No se recibieron items para la preferencia de pago."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        sdk = mercadopago.SDK(
+            "TEST-7444883517933969-051911-01b0f5d4cf34b5295b6d8b8635459bfc-9650294"
+        )
+
+        preference_items = []
+        for item in items:
+            preference_items.append(
+                {
+                    "title": item.get("title"),
+                    "quantity": int(item.get("quantity", 1)),
+                    "unit_price": float(item.get("unit_price")),
+                    "currency_id": "ARS",
+                }
+            )
+
+        preference_data = {
+            "items": preference_items,
+            "payer": {
+                "email": request.user.email,
+            },
+            "back_urls": {
+                "success": "https://tiendafullbike.netlify.app/success",
+                "failure": "https://tiendafullbike.netlify.app/failure",
+                "pending": "https://tiendafullbike.netlify.app/pending",
+            },
+            "auto_return": "approved",
+        }
+
+        preference_response = sdk.preference().create(preference_data)
+
+        if preference_response["status"] != 201:
+            return Response(
+                {"error": "Error creando preferencia en MercadoPago"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        preference = preference_response["response"]
+
+        return Response(
+            {"id": preference["id"], "init_point": preference["init_point"]}
+        )

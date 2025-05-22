@@ -15,4 +15,9 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("logoutall/", views.LogoutAllView.as_view(), name="logoutall"),
     path("register/", views.RegisterView.as_view(), name="register"),
+    path(
+        "create_preference/",
+        views.MercadoPagoPreferenceView.as_view(),
+        name="create_preference",
+    ),
 ]
