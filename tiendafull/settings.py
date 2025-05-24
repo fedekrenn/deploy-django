@@ -29,13 +29,9 @@ SECRET_KEY = os.environ.get(
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "RENDER" not in os.environ
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
-RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+ALLOWED_HOSTS = ["localhost", "tiendafullbike.netlify.app"]
 
 # Application definition
 
@@ -91,7 +87,6 @@ WSGI_APPLICATION = "tiendafull.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgresql://db_tiendafull_v3_user:UWmg8Na1gn83zx6bVUbhdkNri50EuHXp@dpg-d0bvd115pdvs73d3u480-a.oregon-postgres.render.com/db_tiendafull_v3",
         conn_max_age=600,
     )
 }
@@ -153,7 +148,11 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:4200", "http://127.0.0.1:4200", "https://tiendafullbike.netlify.app"]
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+    "https://tiendafullbike.netlify.app",
+]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     "DELETE",
