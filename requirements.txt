@@ -30,7 +30,7 @@ MarkupSafe==3.0.2
 mercadopago==2.3.0
 multidict==6.4.3
 mysql-connector==2.2.9
-mysql-connector-python==8.4.0
+mysql-connector-python==9.1.0
 mysqlclient==2.2.4
 packaging==24.1
 propcache==0.3.1
