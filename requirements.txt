@@ -48,7 +48,7 @@ sphinxcontrib-htmlhelp==2.1.0
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==2.0.0
 sphinxcontrib-serializinghtml==2.0.0
-sqlparse==0.5.0
+sqlparse==0.5.4
 typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.6.3
